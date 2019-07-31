@@ -6,11 +6,11 @@ type Worker struct {
 }
 
 type WorkerFunc interface {
-	Run(task Task) TaskResult
+	Run(task Task, args ...interface{}) TaskResult
 }
 
-type MyWorkerFunc func(task Task) (TaskResult)
+type MyWorkerFunc func(task Task, args ...interface{}) (TaskResult)
 
-func (f MyWorkerFunc) Run(task Task) (TaskResult) {
-	return f(task)
+func (f MyWorkerFunc) Run(task Task, args ...interface{}) (TaskResult) {
+	return f(task, args)
 }

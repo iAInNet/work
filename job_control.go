@@ -70,7 +70,7 @@ func (j *Job) WaitStop(timeout time.Duration) error {
 	return nil
 }
 
-func (j *Job) AddFunc(topic string, f func(task Task) (TaskResult), args ...interface{}) error {
+func (j *Job) AddFunc(topic string, f func(task Task, args ...interface{}) (TaskResult), args ...interface{}) error {
 	//worker并发数
 	var concurrency int
 	if len(args) > 0 {

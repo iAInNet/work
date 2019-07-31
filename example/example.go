@@ -134,7 +134,7 @@ func RegisterWorkerBench(job *work.Job) {
 	job.AddWorker("kxy1", &work.Worker{Call: work.MyWorkerFunc(Mock), MaxConcurrency: 100})
 }
 
-func Mock(task work.Task) (work.TaskResult) {
+func Mock(task work.Task, args ...interface{}) (work.TaskResult) {
 	time.Sleep(time.Millisecond * 5)
 	return work.TaskResult{Id: task.Id}
 }
@@ -148,7 +148,7 @@ func RegisterWorker2(job *work.Job) {
 	job.AddWorker("kxy1", &work.Worker{Call: work.MyWorkerFunc(Me), MaxConcurrency: 5})
 }
 
-func Me(task work.Task) (work.TaskResult) {
+func Me(task work.Task, args ...interface{}) (work.TaskResult) {
 	time.Sleep(time.Millisecond * 50)
 	i, _ := strconv.Atoi(task.Message)
 	if i%10 == 0 {
