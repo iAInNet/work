@@ -50,25 +50,28 @@ func (j *Job) Stop() {
  * @param timeout 如果小于0则默认10秒
  */
 func (j *Job) WaitStop(timeout time.Duration) error {
-	ch := make(chan struct{})
-	j.JobSleep()
-	if timeout <= 0 {
-		timeout = time.Second * 10
-	}
+	var err error
+	j.stopOnce.Do(func() {
+		ch := make(chan struct{})
+		j.JobSleep()
+		if timeout <= 0 {
+			timeout = time.Second * 10
+		}
 
-	go func() {
-		j.wg.Wait()
-		close(ch)
-	}()
+		go func() {
+			j.wg.Wait()
+			close(ch)
+		}()
 
-	select {
-	case <-ch:
-		return nil
-	case <-time.After(timeout):
-		return ErrTimeout
-	}
-
-	return nil
+		select {
+		case <-ch:
+			return
+		case <-time.After(timeout):
+			err = ErrTimeout
+			return
+		}
+	})
+	return err
 }
 
 func (j *Job) AddFunc(topic string, f func(task Task) TaskResult, args ...interface{}) error {

@@ -38,6 +38,8 @@ type Job struct {
 	//上下文
 	ctx context.Context
 
+	stopOnce sync.Once
+
 	//workers及map锁
 	workers map[string]*Worker
 	//map操作锁
